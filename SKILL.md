@@ -42,6 +42,7 @@ const drag = useDragReorder({
 7. **capture 让 pointerup 仍派发到原卡片 → 拖拽结束会带出一个 click**：外部来源拖放必须吞掉这个尾随 click（onExternalDragEnd 里置抑制标记），否则"拖完又点选"重复添加。
 8. **Node 测试环境守卫**：`stopDrag`/`clearDropHighlight`/`dispose` 会在无 window/document 的单测里执行（组件被直接挂载的环境），document 访问必须 `typeof document === 'undefined'` 惰性守卫；卸载路径上的定时用裸 `clearTimeout`（globalThis），不要写 `window.clearTimeout`；模块顶层不得触碰 window。
 9. **退出编辑模式要 `cancelGesture()`**（不只是 stopDrag）：清掉未落地的长按定时与 window 监听，否则点「完成」后的残留定时仍会起拖并写入布局。
+10. **宿主的“默认顺序”哨兵必须先物化**：宿主顺序状态若有 `null = 未自定义（默认全展示）` 的语义，`getOrder` 不得直接透传 `layout ?? []` —— 空数组会被交换逻辑当作空网格，拖拽静默失效；✕/收纳的删除基列表同理，必须回退到目录全量（`layout ?? catalogueKeys`）且**按 key 删**，否则"从空列表删第 0 个"会写回空布局，把所有卡片清空（真实事故：恢复默认后点任意 ✕ → 整个网格清空）。接入规则：进入拖拽/删除前把 null 哨兵物化成实际顺序列表。
 
 ## 验证配方（Playwright 真实鼠标事件）
 

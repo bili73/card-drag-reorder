@@ -15,7 +15,9 @@ export const FLIP_CLASS = 'drag-reorder-flip'
 export interface DragReorderOptions {
   /** 是否允许起拖（如仅编辑模式）；pointerdown 与长按落地时各复核一次。 */
   enabled: () => boolean
-  /** 可排序网格的当前顺序（与卡片 data-key 一致）。 */
+  /** 可排序网格的当前生效顺序（与卡片 data-key 一致）。宿主若有 `null = 默认顺序` 的哨兵状态，
+   *  必须在这里物化成实际列表（如 `layout ?? catalogueKeys`）而非返回空数组 —— 空数组会让交换静默失效，
+   *  且宿主侧删除若以空数组为基列表会把整个网格清空。 */
   getOrder: () => string[]
   /** 交换后写回顺序；组件侧负责响应式更新与持久化。 */
   setOrder: (next: string[]) => void
