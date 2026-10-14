@@ -72,4 +72,4 @@ const drag = useDragReorder({
 
 ## License
 
-未设开源许可证，保留所有权利。如需在本组织外使用请联系作者。
+[MIT](./LICENSE) —— 可自由使用、修改、分发（含商用），保留版权声明即可。
